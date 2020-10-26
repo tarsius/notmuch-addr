@@ -77,26 +77,25 @@ From\\|Mail-Followup-To\\|Mail-Copies-To\\):")
     (list beg end
           (notmuch-addr--name-table (buffer-substring beg end)))))
 
-(defun notmuch-addr--name-table (orig-string)
+(defun notmuch-addr--name-table (_)
   "Like `message--name-table' but also use \"notmuch address...\"."
-  (let ((orig-words (split-string orig-string "[ \t]+"))
-        eudc-responses bbdb-responses notmuch-responses)
+  (let (cached eudc-responses bbdb-responses notmuch-responses)
     (lambda (string pred action)
       (pcase action
         ('metadata '(metadata (category . email)))
         ('lambda t)
         ((or 'nil 't)
-         (when orig-words
+         (unless cached
            (when (and (memq 'eudc message-expand-name-databases)
                       (boundp 'eudc-protocol)
                       eudc-protocol)
-             (setq eudc-responses (eudc-query-with-words orig-words)))
+             (setq eudc-responses (eudc-query-with-words nil)))
            (when (memq 'bbdb message-expand-name-databases)
-             (setq bbdb-responses (message--bbdb-query-with-words orig-words)))
+             (setq bbdb-responses (message--bbdb-query-with-words nil)))
            (when (memq 'notmuch message-expand-name-databases)
-             (setq notmuch-responses (notmuch-addr-query-with-words orig-words)))
+             (setq notmuch-responses (notmuch-addr-query-with-words)))
            (ecomplete-setup)
-           (setq orig-words nil))
+           (setq cached t))
          (let ((candidates
                 ;; TODO Occasionally check if they added `expand-abbrev'!
                 (append (all-completions string eudc-responses pred)
@@ -111,7 +110,7 @@ From\\|Mail-Followup-To\\|Mail-Copies-To\\):")
 
 (defvar notmuch-addr--cache nil)
 
-(defun notmuch-addr-query-with-words (_)
+(defun notmuch-addr-query-with-words ()
   "Like `message--bbdb-query-with-words' but for notmuch."
   (or (and (not current-prefix-arg)
            notmuch-addr--cache)
@@ -129,7 +128,7 @@ From\\|Mail-Followup-To\\|Mail-Copies-To\\):")
   "Read a recipient in the minibuffer."
   (completing-read prompt
                    (let ((current-prefix-arg nil))
-                     (notmuch-addr-query-with-words nil))
+                     (notmuch-addr-query-with-words))
                    nil nil initial-input))
 
 ;;; _
