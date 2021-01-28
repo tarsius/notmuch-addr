@@ -1,12 +1,12 @@
 ;;; notmuch-addr.el --- An alternative to notmuch-address.el  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020 Free Software Foundation, Inc.
+;; Copyright (C) 2020-2021 Free Software Foundation, Inc.
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://git.sr.ht/~tarsius/notmuch-addr
 ;; Keywords: mail
 
-;; Package-Requires: ((emacs "27.1") (notmuch "0.31"))
+;; Package-Requires: ((emacs "27.1") (notmuch "0.32"))
 
 ;; This file is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published
@@ -23,41 +23,53 @@
 
 ;;; Commentary:
 
-;; An alternative to notmuch-address.el.  This implementation is much
+;; An alternative to `notmuch-address'.  This implementation is much
 ;; simpler.  It gives up on persistent caching, external scripts and
 ;; backward compatibility.
 
-;; Also see Emacs' 47a767c24e9cc4323432e29103b0a2cc46f8f3e4 commit.
+;; This implementation uses the improved completion API offered by
+;; Emacs 27.1 and later.  `notmuch-address' uses that old API, which
+;; Emacs still supports.  In [1] I have documented the issues of the
+;; old API and its use in Notmuch, as well as some other defects.
+
+;; To use `notmuch-addr' you must enable its use right after Notmuch
+;; has loaded the old `notmuch-address', which cannot be prevented.
+;; If you do it later then it might have no effect:
+;;
+;; (with-eval-after-load 'notmuch-address
+;;   (require 'notmuch-addr)
+;;   (notmuch-addr-setup))
+
+;; This implementation is essentially identical to the upstream
+;; implementation, except that it uses "notmuch address ..." as
+;; an additional source of completion candidates.
+
+;; [1]: https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li
 
 ;;; Code:
 
 (require 'notmuch)
-
-;;; Counteract notmuch-address.el
-
-(defun notmuch-address-setup--noop (_fn)
-  "Prevent modification of `message-completion-alist'.")
-(advice-add 'notmuch-address-setup :around
-            'notmuch-address-setup--noop)
-
-(defun notmuch-address-from-minibuffer--use-notmuch-addr (prompt)
-  "Pivot to `notmuch-addr-read-recipient'."
-  (notmuch-addr-read-recipient prompt))
-(advice-add 'notmuch-address-from-minibuffer :override
-            'notmuch-address-from-minibuffer--use-notmuch-addr)
-
-;;; And now...
 
 ;; Copy of notmuch-address-completion-headers-regexp.
 (defvar notmuch-addr-completion-headers-regexp
   "^\\(Resent-\\)?\\(To\\|B?Cc\\|Reply-To\\|\
 From\\|Mail-Followup-To\\|Mail-Copies-To\\):")
 
-;; FIXME Don't be as self-opinionated as notmuch-address.el.
-(cl-pushnew 'notmuch message-expand-name-databases)
-(cl-pushnew (cons notmuch-addr-completion-headers-regexp
-                  'notmuch-addr-expand-name)
-            message-completion-alist :test #'equal)
+(defun notmuch-address-from-minibuffer--use-notmuch-addr (prompt)
+  "Pivot to `notmuch-addr-read-recipient'."
+  (notmuch-addr-read-recipient prompt))
+
+(defun notmuch-addr-setup ()
+  "Configure `message-mode' to use `notmuch-addr-expand-name'.
+Also sustituted `notmuch-addr-read-recipient'
+for `notmuch-address-from-minibuffer'."
+  (setq notmuch-address-command 'as-is)
+  (advice-add 'notmuch-address-from-minibuffer :override
+              'notmuch-address-from-minibuffer--use-notmuch-addr)
+  (cl-pushnew 'notmuch message-expand-name-databases)
+  (cl-pushnew (cons notmuch-addr-completion-headers-regexp
+                    'notmuch-addr-expand-name)
+              message-completion-alist :test #'equal))
 
 (defun notmuch-addr-expand-name ()
   "Similar to `message-expand-name'.
