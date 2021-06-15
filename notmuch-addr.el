@@ -133,8 +133,8 @@ for `notmuch-address-from-minibuffer'."
                 (process-lines
                  "notmuch" "address" "--format=text" "--format-version=4"
                  "--output=recipients" "--deduplicate=address"
-	         (mapconcat (lambda (addr) (concat "from:" addr))
-		            (notmuch-user-emails)
+                 (mapconcat (lambda (addr) (concat "from:" addr))
+                            (notmuch-user-emails)
                             " or "))
               (message "Collecting email addresses...done")))))
 
