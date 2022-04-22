@@ -6,7 +6,7 @@
 ;; Homepage: https://git.sr.ht/~tarsius/notmuch-addr
 ;; Keywords: mail
 
-;; Package-Requires: ((emacs "27.1") (notmuch "0.32"))
+;; Package-Requires: ((emacs "27.1") (compat "28.1.1.0") (notmuch "0.32"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -50,6 +50,7 @@
 
 ;;; Code:
 
+(require 'compat)
 (require 'notmuch)
 
 ;; Copy of notmuch-address-completion-headers-regexp.
