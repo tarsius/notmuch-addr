@@ -1,6 +1,7 @@
-;;; notmuch-addr.el --- An alternative to notmuch-address.el  -*- lexical-binding: t -*-
+;;; notmuch-addr.el --- An alternative to notmuch-address.el  -*- lexical-binding:t -*-
 
 ;; Copyright (C) 2020-2021 Free Software Foundation, Inc.
+;; Copyright (C) 2021-2022 Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://git.sr.ht/~tarsius/notmuch-addr
