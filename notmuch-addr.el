@@ -40,7 +40,6 @@
 ;; If you do it later then it might have no effect:
 ;;
 ;; (with-eval-after-load 'notmuch-address
-;;   (require 'notmuch-addr)
 ;;   (notmuch-addr-setup))
 
 ;; This implementation is essentially identical to the upstream
@@ -63,6 +62,7 @@ From\\|Mail-Followup-To\\|Mail-Copies-To\\):")
   "Pivot to `notmuch-addr-read-recipient'."
   (notmuch-addr-read-recipient prompt))
 
+;;;###autoload
 (defun notmuch-addr-setup ()
   "Configure `message-mode' to use `notmuch-addr-expand-name'.
 Also sustituted `notmuch-addr-read-recipient'
