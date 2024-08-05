@@ -18,5 +18,6 @@ If you do it later then it might have no effect:
 #+end_src
 
 #+html: <br><br>
+#+html: <a href="https://github.com/tarsius/notmuch-addr/actions/workflows/compile.yml"><img alt="Compile" src="https://github.com/tarsius/notmuch-addr/actions/workflows/compile.yml/badge.svg"/></a>
 #+html: <a href="https://stable.melpa.org/#/notmuch-addr"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/notmuch-addr-badge.svg"/></a>
 #+html: <a href="https://melpa.org/#/notmuch-addr"><img alt="MELPA" src="https://melpa.org/packages/notmuch-addr-badge.svg"/></a>
