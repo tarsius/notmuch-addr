@@ -1,0 +1,22 @@
+* Improved address completion for Notmuch
+
+An alternative to ~notmuch-address~.  This implementation is much
+simpler.  It gives up on persistent caching, external scripts and
+backward compatibility.
+
+This implementation uses the improved completion API offered by
+Emacs 27.1 and later.  ~notmuch-address~ uses that old API, which
+Emacs still supports, but has [[https://nmbug.notmuchmail.org/nmweb/show/20201108231150.5419-1-jonas%40bernoul.li][issues]].
+
+To use ~notmuch-addr~ you must enable its use right after Notmuch
+has loaded the old ~notmuch-address~, which cannot be prevented.
+If you do it later then it might have no effect:
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'notmuch-address
+  (notmuch-addr-setup))
+#+end_src
+
+#+html: <br><br>
+#+html: <a href="https://stable.melpa.org/#/notmuch-addr"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/notmuch-addr-badge.svg"/></a>
+#+html: <a href="https://melpa.org/#/notmuch-addr"><img alt="MELPA" src="https://melpa.org/packages/notmuch-addr-badge.svg"/></a>
