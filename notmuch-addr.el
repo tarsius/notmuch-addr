@@ -130,7 +130,7 @@ for `notmuch-address-from-minibuffer'."
       (setq notmuch-addr--cache
             (prog2 (message "Collecting email addresses...")
                 (process-lines
-                 "notmuch" "address" "--format=text" "--format-version=4"
+                 notmuch-command "address" "--format=text" "--format-version=4"
                  "--output=recipients" "--deduplicate=address"
                  (mapconcat (lambda (addr) (concat "from:" addr))
                             (notmuch-user-emails)
