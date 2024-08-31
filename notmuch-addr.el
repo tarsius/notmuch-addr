@@ -7,7 +7,7 @@
 ;; Homepage: https://git.sr.ht/~tarsius/notmuch-addr
 ;; Keywords: mail
 
-;; Package-Version: 1.0.0
+;; Package-Version: 1.0.1
 ;; Package-Requires: ((emacs "27.1") (compat "30.0.0.0") (notmuch "0.38"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
