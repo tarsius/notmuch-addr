@@ -7,10 +7,10 @@
 ;; Homepage: https://github.com/tarsius/notmuch-addr
 ;; Keywords: mail
 
-;; Package-Version: 1.1.3
+;; Package-Version: 1.1.4
 ;; Package-Requires: (
 ;;     (emacs   "29.1")
-;;     (compat  "30.1")
+;;     (compat  "31.0")
 ;;     (notmuch "0.39"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
